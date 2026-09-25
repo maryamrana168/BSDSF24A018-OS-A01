@@ -133,7 +133,7 @@ Although the two executables were similar in size in this particular build, thei
 
 This difference is therefore not always visible as a large difference in the executable's file size, especially for a small library like libmyutils. The important distinction is where the library code resides and when it is loaded.
 
-## LD_LIBRARY_PATH environment variable  
+## 9. LD_LIBRARY_PATH environment variable  
 
 
 LD_LIBRARY_PATH is an environment variable that specifies additional directories where the Linux dynamic loader should search for shared libraries.
@@ -162,3 +162,85 @@ The ldd command also confirmed the library being loaded from the project's lib d
 libmyutils.so => /home/maryamrana/BSDSF24A018-OS-A01/lib/libmyutils.so
 
 This demonstrates that the dynamic loader is responsible for locating and loading the required shared libraries at program startup/runtime. The executable itself does not contain the shared library's implementation. If the required library cannot be found in the loader's search paths, the program cannot start.
+
+
+### 10. Man Pages
+
+Man pages are the standard Linux documentation system for commands,
+programs, and library functions. They allow users to access documentation
+directly from the terminal using the `man` command.
+
+For this project, man pages were created in the `man/man3/` directory
+for all six utility functions:
+
+- mystrlen
+- mystrcpy
+- mystrncpy
+- mystrcat
+- wordCount
+- mygrep
+
+Each man page uses groff formatting directives such as `.TH`, `.SH NAME`,
+`.SH SYNOPSIS`, `.SH DESCRIPTION`, and `.SH AUTHOR`.
+
+For example, a page can be previewed before installation using:
+
+man -l man/man3/mystrlen.3
+
+After installation, it can be accessed using:
+
+man mystrlen
+
+
+### 11. Makefile Install Target 
+ 
+The `install` target installs the executable and man pages into standard 
+system directories. 
+ 
+The Makefile defines: 
+ 
+PREFIX = /usr/local 
+BINDIR = $(PREFIX)/bin 
+MANDIR = $(PREFIX)/share/man/man3 
+ 
+The install target creates the required directories and copies the files: 
+ 
+install: all 
+	install -d $(BINDIR) 
+	install -m 755 bin/client $(BINDIR)/client 
+	instal### 10. Makefile Install Target
+
+The Makefile contains an `install` target that installs the executable
+and man pages into standard Linux directories.
+
+The installation directories are:
+
+    PREFIX = /usr/local
+    BINDIR = $(PREFIX)/bin
+    MANDIR = $(PREFIX)/share/man/man3
+
+The install target creates these directories and installs the files with
+appropriate permissions.
+
+The installation is performed using:
+
+    sudo make install
+
+The executable is installed as:
+
+    /usr/local/bin/client
+
+The man pages are installed under:
+
+    /usr/local/share/man/man3/
+
+After installation, the program can be run from any directory using:
+
+    client
+
+and the documentation can be accessed using:
+
+    man mystrlen
+
+This demonstrates how a Makefile can automate installation of both an
+executable and its associated Linux documentation.
