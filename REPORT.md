@@ -103,3 +103,62 @@ Therefore, after static linking, functions such as mystrlen are part of the exec
 
 
 
+### 7. Position-Independent Code (-fPIC) 
+
+Position-Independent Code (PIC) is machine code that can execute correctly regardless of the memory address where it is loaded. The -fPIC compiler option tells GCC to generate position-independent code.
+
+Shared libraries such as libmyutils.so can be loaded at different memory addresses by different programs. Therefore, their code cannot depend on fixed memory addresses. Using -fPIC allows the same shared-library code to be loaded and used by multiple programs without requiring the library to be modified for a particular memory location.
+
+In this task, -fPIC was used when compiling the library source files:
+
+gcc -Wall -Wextra -Iinclude -fPIC -c src/mystrfunctions.c
+gcc -Wall -Wextra -Iinclude -fPIC -c src/myfilefunctions.c
+
+The resulting position-independent code was then used to create lib/libmyutils.so.
+
+### 8. Difference in file size between your static and dynamic clients
+
+The static and dynamic clients may have different file sizes because of how the library code is included.
+
+With static linking, the required library object code is copied into the executable during the linking process. Therefore, the executable contains its own copies of functions such as mystrlen, mystrcpy, mystrcat, mygrep, and wordCount.
+
+With dynamic linking, the library code not copied into the executable. Instead, client_dynamic contains references to the functions and a dependency on libmyutils.so. The shared library is loaded separately by the dynamic loader when the program runs.
+
+In this task, the measured sizes were approximately:
+
+client_static   17K
+client_dynamic  17K
+
+Although the two executables were similar in size in this particular build, their contents and linking mechanisms are different. client_static contains the library's required code, while client_dynamic refers to libmyutils.so, which contains the actual implementations.
+
+This difference is therefore not always visible as a large difference in the executable's file size, especially for a small library like libmyutils. The important distinction is where the library code resides and when it is loaded.
+
+## LD_LIBRARY_PATH environment variable  
+
+
+LD_LIBRARY_PATH is an environment variable that specifies additional directories where the Linux dynamic loader should search for shared libraries.
+
+When we initially ran:
+
+./bin/client_dynamic
+
+the program produced:
+
+error while loading shared libraries: libmyutils.so:
+cannot open shared object file: No such file or directory
+
+This happened because libmyutils.so was located in the project's lib/ directory, which was not in the dynamic loader's default library search paths.
+
+We therefore used:
+
+export LD_LIBRARY_PATH=$PWD/lib
+
+After setting this variable, the program successfully located and loaded libmyutils.so:
+
+./bin/client_dynamic
+
+The ldd command also confirmed the library being loaded from the project's lib directory:
+
+libmyutils.so => /home/maryamrana/BSDSF24A018-OS-A01/lib/libmyutils.so
+
+This demonstrates that the dynamic loader is responsible for locating and loading the required shared libraries at program startup/runtime. The executable itself does not contain the shared library's implementation. If the required library cannot be found in the loader's search paths, the program cannot start.
