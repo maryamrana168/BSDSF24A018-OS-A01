@@ -1,0 +1,17 @@
+.TH MYSTRCAT 3 "September 2026" "OS Assignment" "Library Functions"
+.SH NAME
+mystrcat \- concatenate two strings
+.SH SYNOPSIS
+.B #include "mystrfunctions.h"
+.PP
+.B int mystrcat(char *dest, const char *src);
+.SH DESCRIPTION
+.B mystrcat
+appends the string pointed to by
+.I src
+to the end of the string pointed to by
+.I dest.
+The resulting string is null terminated.
+The destination buffer must have enough space for the combined strings.
+.SH AUTHOR
+Maryam Rana <maryamrana168@gmail.com>

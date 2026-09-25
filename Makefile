@@ -1,6 +1,9 @@
-CC = gcc
+CC=gcc
 CFLAGS = -Wall -Wextra -Iinclude
 PICFLAGS = -fPIC
+PREFIX = /usr/local
+BINDIR = $(PREFIX)/bin
+MANDIR = $(PREFIX)/share/man/man3
 
 STATIC_TARGET = bin/client_static
 DYNAMIC_TARGET = bin/client_dynamic
@@ -37,6 +40,12 @@ $(OBJDIR)/mystrfunctions.o: src/mystrfunctions.c
 
 $(OBJDIR)/myfilefunctions.o: src/myfilefunctions.c
 	$(CC) $(CFLAGS) $(PICFLAGS) -c src/myfilefunctions.c -o $(OBJDIR)/myfilefunctions.o
+
+install: all
+	install -d $(BINDIR)
+	install -m 755 bin/client $(BINDIR)/client
+	install -d $(MANDIR)
+	install -m 644 man/man3/*.3 $(MANDIR)/
 
 clean:
 	rm -f $(OBJDIR)/*.o $(STATIC_LIB) $(DYNAMIC_LIB) $(STATIC_TARGET) $(DYNAMIC_TARGET)

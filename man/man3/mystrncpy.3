@@ -1,0 +1,18 @@
+.TH MYSTRNCPY 3 "September 2026" "OS Assignment" "Library Functions"
+.SH NAME
+mystrncpy \- copy a specified number of characters
+.SH SYNOPSIS
+.B #include "mystrfunctions.h"
+.PP
+.B int mystrncpy(char *dest, const char *src, int n);
+.SH DESCRIPTION
+.B mystrncpy
+copies up to
+.I n
+characters from the string pointed to by
+.I src
+to the buffer pointed to by
+.I dest.
+The function returns the number of characters processed.
+.SH AUTHOR
+Maryam Rana <maryamrana168@gmail.com>
